@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: 室温・湿度モニター API
+  version: 1.0.0
+  description: |
+    API for THMonitor.
+    室温・湿度モニターAPI。
+servers:
+  - url: "https://thmonitor.nodokamome.com/api/{ver}"
+    variables:
+      ver:
+        enum:
+          - v1
+        default: v1
+tags:
+  - name: TH
+    description: Manage temperature and humidity.
+
+security:
+  - token: []
+
+paths:
+  "/th":
+    get:
+      tags:
+        - TH
+      summary: 室温・湿度一覧
+      parameters:
+        - in: query
+          name: date_start
+          schema:
+            type: date
+            example: 2021-08-01
+        - in: query
+          name: date_end
+          schema:
+            type: date
+            example: 2021-08-31
+        - in: query
+          name: monitor
+          schema:
+            type: string
+            enum:
+              - temperature
+              - humidity
+            example: temperature
+      responses:
+        "200":
+          description: |
+            取得に成功しました
+        "202":
+          description: |
+            値が見つかりませんでした
+        "401":
+          description: |
+            認証に失敗しました
+        "403":
+          description: |
+            エラー
+    post:
+      tags:
+        - TH
+      summary: 室温・湿度の新規登録
+      requestBody:
+        required: true
+        content:
+          appliction/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    date:
+                      type: date
+                      example: 2021-08-01:00:00:00
+                    temperature:
+                      type: double
+                      example: 25.0
+                    humidity:
+                      type: double
+                      example: 40.0
+      responses:
+        "200":
+          description: |
+            登録に成功しました
+        "401":
+          description: |
+            認証に失敗しました
+        "403":
+          description: |
+            エラー
+components:
+  securitySchemes:
+    token:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
