@@ -3,7 +3,7 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.send('gomokuonline api v1');
+  res.sendfile('./public/index.html');  //クライアントにindex.htmlを返す
 });
 
 module.exports = router;

@@ -118,3 +118,4 @@ out
 # config
 mysql.config.js
 
+src/public

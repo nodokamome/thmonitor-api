@@ -14,7 +14,7 @@ servers:
         default: v1
 tags:
   - name: TH
-    description: Manage temperature and humidity.
+    description: Manage temp and humidity.
 
 security:
   - token: []
@@ -41,9 +41,9 @@ paths:
           schema:
             type: string
             enum:
-              - temperature
+              - temp
               - humidity
-            example: temperature
+            example: temp
       responses:
         "200":
           description: |
@@ -74,7 +74,7 @@ paths:
                     date:
                       type: date
                       example: 2021-08-01:00:00:00
-                    temperature:
+                    temp:
                       type: double
                       example: 25.0
                     humidity:
