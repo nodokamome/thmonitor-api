@@ -38,7 +38,6 @@ router.get('/', verifyToken, (req, res, next) => {
       }
     }
   });
-  mysqlConnection.end();
   return;
 });
 
@@ -61,7 +60,6 @@ router.post('/', verifyToken, (req, res, next) => {
       res.status(200).json({ message: 'Success' });
     }
   });
-  mysqlConnection.end();
   return;
 });
 
