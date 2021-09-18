@@ -18,6 +18,7 @@ function verifyToken(req, res, next) {
             });
         }
     });
+    mysqlConnection.end();
 }
 
 module.exports = verifyToken;
