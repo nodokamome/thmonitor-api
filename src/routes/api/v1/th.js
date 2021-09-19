@@ -53,7 +53,7 @@ router.post('/', verifyToken, (req, res, next) => {
     return;
   }
   const sql = 'INSERT INTO th (datetime_stamp, temp, hum) VALUE(?, ?, ?)';
-  const table = [req.body.datetimeStamp, req.body.temp, req.body.hum];
+  const table = [dayjs(req.body.datetimeStamp).format('YYYY-MM-DD HH-mm-ss'), req.body.temp, req.body.hum];
   const query = mysql.format(sql, table);
 
   mysqlConnection.query(query, (err) => {
