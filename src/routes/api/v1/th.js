@@ -1,17 +1,19 @@
 const express = require('express');
+const dayjs = require('dayjs')
 const verifyToken = require('../../../middlewares/verifyToken');
 const mysql = require('mysql');
 const mysqlConnection = require('../../../middlewares/mysqlConnection');
 
 const router = express.Router();
+dayjs.locale('ja');
 
 /* GET */
 /* 室温・湿度の一覧取得 */
 router.get('/', verifyToken, (req, res, next) => {
   const sql = (() => {
     let sql = 'SELECT * FROM ?? ';
-    if (req.query.date_start && req.query.date_end) {
-      sql += 'WHERE ?? = ? && ?? = ?'
+    if (req.query.datetime_stamp_start && req.query.datetime_stamp_end) {
+      sql += 'WHERE ?? BETWEEN ? AND  ?'
     }
     return sql;
   })();
@@ -19,8 +21,10 @@ router.get('/', verifyToken, (req, res, next) => {
   const table = (() => {
     const table = ['th']
     // 指定プレイヤーの情報取得
-    if (req.query.date_start && req.query.date_end) {
-      table.push('date_start', req.query.date_start, 'date_end', req.query.date_start)
+    if (req.query.datetime_stamp_start && req.query.datetime_stamp_end) {
+      const datetimeStampStart = dayjs(req.query.datetime_stamp_start).format('YYYY-MM-DD HH:mm:ss')
+      const datetimeStampEnd = dayjs(req.query.datetime_stamp_end).format('YYYY-MM-DD HH:mm:ss')
+      table.push('datetime_stamp', datetimeStampStart, datetimeStampEnd)
     }
     return table
   })();
@@ -44,12 +48,12 @@ router.get('/', verifyToken, (req, res, next) => {
 /* POST */
 /* 室温・湿度の新規登録 */
 router.post('/', verifyToken, (req, res, next) => {
-  if (!req.body.timeStamp && !req.body.temp && !req.body.hum) {
+  if (!req.body.datetimeStamp && !req.body.temp && !req.body.hum) {
     res.status(403).json({ message: 'Error' });
     return;
   }
-  const sql = 'INSERT INTO th (time_stamp, temp, hum) VALUE(?, ?, ?)';
-  const table = [req.body.timeStamp, req.body.temp, req.body.hum];
+  const sql = 'INSERT INTO th (datetime_stamp, temp, hum) VALUE(?, ?, ?)';
+  const table = [req.body.datetimeStamp, req.body.temp, req.body.hum];
   const query = mysql.format(sql, table);
 
   mysqlConnection.query(query, (err) => {
